@@ -11,23 +11,35 @@ consumer_secret = ""
 access_key = ""
 access_secret = ""
 
-def determine_positivity(screen_name):
-    print("Determining positivity")
-    with open('%s_tweets.csv' % screen_name, 'r') as f:
-        reader = csv.DictReader(f)
-        # reader2 = csv.reader(f, delimiter=',')
-#        for row in reader:
-            # print(row['time'])
 
-    f.close()
-    pass
+def read_json():
+    with open('api_keys.json') as js:
+        data = json.load(js)
+    api_keys = []
+    api_keys.append(str(data['consumer_key']))
+    api_keys.append(str(data['consumer_secret']))
+    api_keys.append(str(data['access_key']))
+    api_keys.append(str(data['access_secret']))
+    return api_keys
 
-def get_tweets(screen_name):
+#TODO
+# def determine_positivity(screen_name):
+#     print("Determining positivity")
+#     with open('%s_tweets.csv' % screen_name, 'r') as f:
+#         reader = csv.DictReader(f)
+#         # reader2 = csv.reader(f, delimiter=',')
+# #        for row in reader:
+#             # print(row['time'])
+#
+#     f.close()
+#     pass
+
+def get_tweets(screen_name, api_keys):
     # Currently, this will only read my tweets (JK, I'll find someone worthwhile)
 
     #Twitter auth (creds to Rony)
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
+    auth = tweepy.OAuthHandler(api_keys[0], api_keys[1])
+    auth.set_access_token(api_keys[2], api_keys[3])
     api = tweepy.API(auth)
 
     # initialize a list to hold all the tweepy Tweets
@@ -81,7 +93,8 @@ def get_tweets(screen_name):
 
 def main(argv):
     # print(argv)
-    get_tweets(argv)
+    api_keys = read_json()
+    get_tweets(argv, api_keys)
 
 if __name__ == '__main__':
     # pass in the username of the account you want to download
