@@ -22,10 +22,10 @@ def read_json():
     api_keys.append(str(data['access_secret']))
     return api_keys
 
-def get_tweets(screen_name, api_keys):
-    # Currently, this will only read my tweets (JK, I'll find someone worthwhile)
 
-    #Twitter auth (creds to Rony)
+def get_tweets(screen_name, api_keys):
+
+    # Twitter auth codes
     auth = tweepy.OAuthHandler(api_keys[0], api_keys[1])
     auth.set_access_token(api_keys[2], api_keys[3])
     api = tweepy.API(auth)
@@ -75,7 +75,6 @@ def get_tweets(screen_name, api_keys):
     # “favorite_count”
     # “lang"
     f.close()
-
     pass
 
 def main(argv):
