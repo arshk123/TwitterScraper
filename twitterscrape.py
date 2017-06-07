@@ -22,18 +22,6 @@ def read_json():
     api_keys.append(str(data['access_secret']))
     return api_keys
 
-#TODO
-# def determine_positivity(screen_name):
-#     print("Determining positivity")
-#     with open('%s_tweets.csv' % screen_name, 'r') as f:
-#         reader = csv.DictReader(f)
-#         # reader2 = csv.reader(f, delimiter=',')
-# #        for row in reader:
-#             # print(row['time'])
-#
-#     f.close()
-#     pass
-
 def get_tweets(screen_name, api_keys):
     # Currently, this will only read my tweets (JK, I'll find someone worthwhile)
 
@@ -87,7 +75,6 @@ def get_tweets(screen_name, api_keys):
     # “favorite_count”
     # “lang"
     f.close()
-    determine_positivity(screen_name)
 
     pass
 
