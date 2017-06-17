@@ -66,14 +66,7 @@ def get_tweets(screen_name, api_keys):
                             'favorite_count': json_str["favorite_count"],
                             'lang': json_str["lang"]})
 
-    # “created_at”
-    # “id”
-    # “text”
-    # “user_mentions”
-    # “time_zone”
-    # “retweet_count”
-    # “favorite_count”
-    # “lang"
+
     f.close()
     pass
 
