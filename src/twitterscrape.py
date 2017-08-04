@@ -13,7 +13,7 @@ access_secret = ""
 
 
 def read_json():
-    with open('api_keys.json') as js:
+    with open('../api/api_keys.json') as js:
         data = json.load(js)
     api_keys = []
     api_keys.append(str(data['consumer_key']))
@@ -54,7 +54,7 @@ def get_tweets(screen_name, api_keys):
         oldest = alltweets[-1].id - 1
 
     # write the csv
-    with open('%s_tweets.csv' % screen_name, 'w+') as f:
+    with open('../data/%s_tweets.csv' % screen_name, 'w+') as f:
         writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
         writer.writeheader()
         for tweet in alltweets:
