@@ -58,7 +58,7 @@ class Scraper:
             oldest = alltweets[-1].id - 1
 
         # write the csv
-        with open('%s_tweets.csv' % screen_name, 'w+') as f:
+        with open('../data/%s_tweets.csv' % screen_name, 'w+') as f:
             writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
             writer.writeheader()
             for tweet in alltweets:
