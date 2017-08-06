@@ -31,8 +31,25 @@ class Scraper:
         auth.set_access_token(self.api_keys[2], self.api_keys[3])
         self.api = tweepy.API(auth)
 
+    def get_hashtag_tweets(self, hash_tag, num_tweets):
 
-    def get_tweets(self, screen_name):
+        hash_tweets = tweepy.Cursor(self.api.search, q=hash_tag).items(num_tweets)
+
+        with open('../data/hashtag_data/%s_tweets.csv' % hash_tag, 'w+') as f:
+            writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
+            writer.writeheader()
+
+            for tweet in hash_tweets:
+                json_str = tweet._json
+                writer.writerow({'time': json_str["created_at"],
+                                'tweet': json_str["text"],
+                                'id': json_str["id"],
+                                'retweet_count': json_str["retweet_count"],
+                                'favorite_count': json_str["favorite_count"],
+                                'lang': json_str["lang"]})
+
+
+    def get_user_tweets(self, screen_name):
 
         # initialize a list to hold all the tweepy Tweets
         alltweets = []
@@ -58,7 +75,7 @@ class Scraper:
             oldest = alltweets[-1].id - 1
 
         # write the csv
-        with open('../data/%s_tweets.csv' % screen_name, 'w+') as f:
+        with open('../data/user_data/%s_tweets.csv' % screen_name, 'w+') as f:
             writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
             writer.writeheader()
             for tweet in alltweets:
@@ -84,7 +101,8 @@ class Scraper:
 def main(argv):
     # print(argv)
     scrpr = Scraper()
-    scrpr.get_tweets(argv)
+    scrpr.get_user_tweets(argv)
+    scrpr.get_hashtag_tweets(hash_tag="#DisruptTheNarrative", num_tweets=10)
 
 if __name__ == '__main__':
     # pass in the username of the account you want to download
