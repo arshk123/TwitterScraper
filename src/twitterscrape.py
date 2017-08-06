@@ -99,6 +99,7 @@ class Scraper:
         pass
 
 def main(argv):
+    # TODO add command line arguments
     # print(argv)
     scrpr = Scraper()
     scrpr.get_user_tweets(argv)
