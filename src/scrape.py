@@ -99,9 +99,6 @@ class Scraper:
         pass
 
 def main(args):
-
-
-    # TODO add command line arguments
     scrpr = Scraper()
 
     if args.username:
