@@ -1,3 +1,3 @@
-Twitter Scraper built on the Tweepy library.
+Twitter Scraper, future sentiment analyzer for User tweets or hashtag tweets.
 
-Usage: python3 twitterscrape.py <twitter_handle>
+
