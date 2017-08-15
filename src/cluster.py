@@ -20,11 +20,11 @@ def cluster(df, reduction=False):
         """
         if reduction is True:
             df = df.toarray()
-            pca = PCA().fit(df)
+            pca = PCA(n_components=3).fit(df)
             X = pca.transform(df)
         else:
             X = df
-        threshold = 1.5
+        threshold = 3
         # eventually standardize parameter list as function argument and allow for different algorithms to be used
         model = Birch(threshold=threshold, n_clusters=None)
         out = model.fit_predict(X)
@@ -36,15 +36,25 @@ def cluster(df, reduction=False):
         # out = set of labels
         return out, model, centroids
 
+def get_clusters(tweets, labels):
+    clusters = {}
+    for idx, val in enumerate(labels):
+        if val in clusters:
+            clusters[val].append(idx)
+        else:
+            clusters[val] = []
+            clusters[val].append(idx)
+        tweets[idx]['cluster'] = val
 
-def visualize(tweets, labels, centroids):
-    print("visualize")
 
-
-def print_cluster(tweets, labels):
-    for idx, val in enumerate(tweets):
-        print(labels[idx])
-        print(val['tweet'])
+def print_cluster(tweets, clusters):
+    for cluster in clusters.keys():
+        for row in tweets:
+            if row['cluster'] == cluster:
+                print(row['tweet'])
+        print("")
+        print("")
+        print("")
 
 
 def vectorize(tweets):
@@ -69,11 +79,11 @@ def main():
         tweet['tokenize_stemmed_tweet'] = tokenize_and_stem(tweet['tweet'])
     sp_fv = vectorize(tweets)
     # 1 cluster tweets based on word frequency after dropping stop words
-    labels, model, centroids = cluster(sp_fv)
-
+    labels, model, centroids = cluster(sp_fv, reduction=False)
+    clusters = get_clusters(tweets, labels)
+    print_cluster(tweets, clusters)
     # 2 NLP Sentiment analysis
     # 3 combine all hashtags from all tweets and determine overall sentiment of user
-
 
 if __name__ == '__main__':
     main()
