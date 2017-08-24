@@ -36,7 +36,7 @@ class Scraper:
     def get_hashtag_tweets(self, hash_tag, num_tweets):
 
         hash_tweets = tweepy.Cursor(self.api.search, q=hash_tag).items(num_tweets)
-
+        cur = self.conn.cursor()
         with open('../data/hashtag_data/%s_tweets.csv' % hash_tag, 'w+') as f:
             writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
             writer.writeheader()
@@ -49,6 +49,17 @@ class Scraper:
                                 'retweet_count': json_str["retweet_count"],
                                 'favorite_count': json_str["favorite_count"],
                                 'lang': json_str["lang"]})
+                # write to db
+                json_obj = {'time': json_str["created_at"],
+                            'id': json_str["id"],
+                            'retweet_count': json_str["retweet_count"],
+                            'favorite_count': json_str["favorite_count"],
+                            'lang': json_str["lang"]}
+                json_str["text"] = json_str["text"].replace("'", "''")
+
+                cur.execute('insert into hashtag_tweets (tweet, hash_tag, tweet_info) values (\'%s\', \'%s\', \'%s\')' % (json_str["text"], hash_tag, json.dumps(json_obj)))
+                self.conn.commit()
+        f.close()
 
 
     def get_user_tweets(self, screen_name):
@@ -76,6 +87,7 @@ class Scraper:
             # update the id of the oldest tweet less one
             oldest = alltweets[-1].id - 1
 
+        cur = self.conn.cursor()
         # write the csv
         with open('../data/user_data/%s_tweets.csv' % screen_name, 'w+') as f:
             writer = csv.DictWriter(f, fieldnames = ["time", "tweet", "id", "retweet_count", "favorite_count", "lang"])
@@ -89,16 +101,18 @@ class Scraper:
                                 'favorite_count': json_str["favorite_count"],
                                 'lang': json_str["lang"]})
 
-        # “created_at”
-        # “id”
-        # “text”
-        # “user_mentions”
-        # “time_zone”
-        # “retweet_count”
-        # “favorite_count”
-        # “lang"
+                # write to db
+                json_obj = {'time': json_str["created_at"],
+                            'id': json_str["id"],
+                            'retweet_count': json_str["retweet_count"],
+                            'favorite_count': json_str["favorite_count"],
+                            'lang': json_str["lang"]}
+                json_str["text"] = json_str["text"].replace("'", "''")
+                cur.execute('insert into user_tweets (tweet, user_name, tweet_info) values (\'%s\', \'%s\', \'%s\')' % (json_str["text"], screen_name, json.dumps(json_obj)))
+                self.conn.commit()
+
         f.close()
-        pass
+
 
 def main(args):
     scrpr = Scraper()
