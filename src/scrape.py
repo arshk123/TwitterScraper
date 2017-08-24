@@ -4,6 +4,7 @@ import csv
 import sys, getopt
 import json
 import argparse
+import db
 
 # Twitter API credentials
 consumer_key = ""
@@ -15,10 +16,11 @@ class Scraper:
     def __init__(self):
         self.getCredentials()
         self.setupAuth()
-
+        self.conn = db.getDBConnection()
     def getCredentials(self):
-        with open('../api/api_keys.json') as js:
+        with open('../config/config.json') as js:
             data = json.load(js)
+            data = data['twitter_keys']
         api_keys = []
         api_keys.append(str(data['consumer_key']))
         api_keys.append(str(data['consumer_secret']))
